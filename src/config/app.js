@@ -1,12 +1,14 @@
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
+import errorHandler from '../infrastructure/http/middlewares/errorHandler.js';
 
 export const createApp = () => {
   const app = express();
 
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+  app.use(errorHandler);
 
   const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
