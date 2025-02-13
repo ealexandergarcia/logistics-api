@@ -25,5 +25,6 @@ const botsUserAgents = [
     "W3C_Validator",
   ];
   
-  module.exports = botsUserAgents;
+
+  export default botsUserAgents;
   

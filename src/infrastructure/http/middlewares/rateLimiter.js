@@ -1,5 +1,5 @@
-const rateLimit = require("express-rate-limit");
-const botsUserAgents = require("../../../../utils/bots"); // Importando la lista de bots
+import rateLimit from "express-rate-limit";
+import botsUserAgents from "../../../utils/bots.js";
 
 /**
  * Creates a rate-limiting middleware with custom error handling.
@@ -45,4 +45,4 @@ const limit = (method) => {
   return createRateLimitHandler(max, windowMs, message);
 };
 
-module.exports = { limit };
+export { limit };
