@@ -9,8 +9,8 @@ class ShipmentRepository extends IShipmentRepository {
 
   async save(shipment) {
     const result = await this.db.query(
-      'INSERT INTO shipments (user_id, package_id, address_id, status) VALUES (?, ?, ?, ?)',
-      [shipment.userId, shipment.packageId, shipment.addressId, shipment.status]
+      'INSERT INTO shipments (user_id, package_id, address_id, return_address_id, status) VALUES (?, ?, ?, ?, ?)',
+      [shipment.userId, shipment.packageId, shipment.addressId, shipment.returnAddressId, shipment.status]
     );
     return result.insertId;
   }
