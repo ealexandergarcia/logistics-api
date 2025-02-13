@@ -1,6 +1,7 @@
 {
   "name": "logistics-api",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "start": "node --env-file .env --watch src/index.js",
     "test": "jest",
