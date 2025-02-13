@@ -50,8 +50,12 @@ const loginUserUseCase = new LoginUserUseCase(UserRepository);
 export const registerUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    await registerUserUseCase.execute({ email, password });
-    res.status(201).json({ message: "User registered successfully!" });
+    const existingUser = await UserRepository.findByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+    const newUser = await registerUserUseCase.execute({ email, password });
+    res.status(201).json({ message: "User registered successfully!", user: newUser });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
