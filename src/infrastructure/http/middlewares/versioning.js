@@ -1,4 +1,4 @@
-const semver = require("semver");
+import semver from "semver";
 
 /**
  * Middleware for version control of API requests.
@@ -9,7 +9,7 @@ const semver = require("semver");
  * @param {string} version - The required version to match against the `x-version` header.
  * @returns {function} Express middleware function that performs versioning check.
  */
-exports.versioning = (version) => {
+export const versioning = (version) => {
   return (req, res, next) => {
     const requestedVersion = req.headers["x-version"];
 
@@ -32,3 +32,4 @@ exports.versioning = (version) => {
     return next("route");
   };
 };
+
