@@ -18,3 +18,9 @@ export const shipmentValidator = [
     body('postalCode').notEmpty().withMessage('Postal code is required'),
     body('country').notEmpty().withMessage('Country is required'),
 ];
+
+export const shipmentAssignmentValidator = [
+    body('shipmentId').isInt().withMessage('Shipment ID must be an integer'),
+    body('routeId').isInt().withMessage('Route ID must be an integer'),
+    body('carrierId').isInt().withMessage('Carrier ID must be an integer')
+  ];
