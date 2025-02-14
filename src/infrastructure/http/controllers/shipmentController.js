@@ -1,8 +1,8 @@
+import { assignShipmentUseCase } from '../../../application/use-cases/assignShipmentUseCase.js';
 import PackageRepository from '../../../domain/repositories/packageRepository.js';
 import ShipmentRepository from '../../../domain/repositories/shipmentRepository.js';
 import AddressRepository from '../../../domain/repositories/addressRepository.js';
 import Package from '../../../domain/entities/package.js';
-import Shipment from '../../../domain/entities/shipment.js';
 import Address from '../../../domain/entities/address.js';
 import { validateAddress } from '../../../services/addressValidationService.js'; // Import the validation function
 
@@ -104,7 +104,7 @@ export const registerShipment = async (req, res) => {
 
     const fullAddress = `${streetAddress}, ${city}, ${country}`;
     const fullReturnAddress = `${returnStreetAddress}, ${returnCity}, ${returnCountry}`;
-    
+
     if (!streetAddress || !(await validateAddress(fullAddress))) {
       return res.status(400).json({ message: 'Invalid destination address' });
     }
@@ -132,5 +132,16 @@ export const registerShipment = async (req, res) => {
     res.status(201).json({ message: 'Shipment registered successfully!', shipmentId });
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+export const assignShipment = async (req, res, next) => {
+  try {
+    const { shipmentId, routeId, carrierId } = req.body;
+    const userId = req.user.userId; // Obtener el userId del objeto req.user
+    const shipment = await assignShipmentUseCase({ userId, shipmentId, routeId, carrierId });
+    res.status(200).json({ message: 'Shipment assigned successfully', shipment });
+  } catch (error) {
+    next(error);
   }
 };
