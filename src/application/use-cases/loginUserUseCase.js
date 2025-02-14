@@ -14,8 +14,7 @@ class LoginUserUseCase {
     if (!isPasswordValid) {
       throw new Error("Invalid password");
     }
-
-    const token = JwtService.generateToken({ userId: user.id });
+    const token = JwtService.generateToken({ userId: user.id, role: user.role });
     return token;
   }
 }
