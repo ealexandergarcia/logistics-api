@@ -3,7 +3,7 @@ import { registerValidator } from '../validators/userValidator.js';
 import { registerUser, loginUser } from '../controllers/userController.js';
 import { limit } from '../middlewares/rateLimiter.js';
 import { versioning } from '../middlewares/versioning.js';
-import handleValidationErrors from '../middlewares/errorHandler.js';
+import {handleValidationErrors} from '../middlewares/errorHandler.js';
 
 const router = express.Router();
 
