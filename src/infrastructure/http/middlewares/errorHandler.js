@@ -3,7 +3,7 @@ import { validationResult } from 'express-validator';
 /**
  * Middleware to handle validation errors.
  */
-const handleValidationErrors = (req, res, next) => {
+export const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -11,7 +11,9 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
-
+/**
+ * Global error handling middleware.
+ */
 export const errorHandler = (err, req, res, next) => {
   if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
     return res.status(400).json({ message: 'Invalid JSON payload' });
@@ -20,6 +22,3 @@ export const errorHandler = (err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Internal server error' });
 };
-
-
-export default handleValidationErrors;
