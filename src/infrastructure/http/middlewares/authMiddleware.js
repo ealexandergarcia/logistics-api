@@ -1,4 +1,4 @@
-import JwtService from '../../../utils/jwtService';
+import JwtService from './jwtService.js';
 
 /**
  * Middleware for validating JWT in request headers.
