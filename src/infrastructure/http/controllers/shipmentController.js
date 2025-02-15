@@ -2,6 +2,7 @@ import { assignShipmentUseCase } from '../../../application/use-cases/assignShip
 import PackageRepository from '../../../domain/repositories/packageRepository.js';
 import ShipmentRepository from '../../../domain/repositories/shipmentRepository.js';
 import AddressRepository from '../../../domain/repositories/addressRepository.js';
+import ShipmentStatusRepository from '../../../domain/repositories/shipmentStatusRepository.js';
 import Package from '../../../domain/entities/package.js';
 import Address from '../../../domain/entities/address.js';
 import Shipment from '../../../domain/entities/shipment.js';
@@ -39,6 +40,16 @@ export const registerShipment = async (req, res) => {
     const shipment = new Shipment({ userId, packageId, addressId, returnAddressId });
     const shipmentId = await ShipmentRepository.save(shipment);
 
+    // Store shipment data in Redis
+    const shipmentData = {
+      userId,
+      packageId,
+      addressId,
+      returnAddressId,
+      status: 'Pending'
+    };
+    await ShipmentStatusRepository.setShipmentData(shipmentId, shipmentData);
+
     res.status(201).json({ message: 'Shipment registered successfully!', shipmentId });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -50,6 +61,10 @@ export const assignShipment = async (req, res, next) => {
     const { shipmentId, routeId, carrierId } = req.body;
     const userId = req.user.userId;
     const shipment = await assignShipmentUseCase({ userId, shipmentId, routeId, carrierId });
+
+    // Update shipment status in Redis
+    await ShipmentStatusRepository.setStatus(shipmentId, 'In Transit');
+
     res.status(200).json({ message: 'Shipment assigned successfully', shipment });
   } catch (error) {
     res.status(400).json({ message: error.message });
