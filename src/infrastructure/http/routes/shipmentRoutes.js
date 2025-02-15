@@ -179,6 +179,6 @@ router.post('/assign', limit('post'), versioning('1.0.0'), jwtMiddleware, adminM
  *       500:
  *         description: Internal server error
  */
-router.get('/status/:id', limit('get'), versioning('1.0.0'), jwtMiddleware, getShipmentStatus);
+router.get('/status/:id', limit('get'), versioning('1.0.0'),handleValidationErrors, jwtMiddleware,getShipmentStatus);
 
 export default router;
