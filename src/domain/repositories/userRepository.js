@@ -16,6 +16,10 @@ class UserRepository extends IUserRepository {
     const result = await this.db.query('INSERT INTO users (email, password) VALUES (?, ?)', [user.email, user.password]);
     return result.insertId;
   }
+  async findById(userId) {
+    const user = await db.query('SELECT * FROM users WHERE id = $1', [userId]);
+    return user.rows[0];
+  }
 }
 
 export default new UserRepository();
