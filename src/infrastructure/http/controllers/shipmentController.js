@@ -4,6 +4,7 @@ import ShipmentRepository from '../../../domain/repositories/shipmentRepository.
 import AddressRepository from '../../../domain/repositories/addressRepository.js';
 import Package from '../../../domain/entities/package.js';
 import Address from '../../../domain/entities/address.js';
+import Shipment from '../../../domain/entities/shipment.js';
 import { validateAddress } from '../../../services/addressValidationService.js'; // Import the validation function
 
 
@@ -48,7 +49,7 @@ export const registerShipment = async (req, res) => {
 export const assignShipment = async (req, res, next) => {
   try {
     const { shipmentId, routeId, carrierId } = req.body;
-    const userId = req.user.userId; // Obtener el userId del objeto req.user
+    const userId = req.user.userId;
     const shipment = await assignShipmentUseCase({ userId, shipmentId, routeId, carrierId });
     res.status(200).json({ message: 'Shipment assigned successfully', shipment });
   } catch (error) {
