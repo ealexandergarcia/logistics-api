@@ -13,6 +13,20 @@ const options = {
         url: 'http://localhost:3000/api/v1/',
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT', // Especifica que es un JWT
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [], // Aplica el esquema de seguridad globalmente
+      },
+    ],
   },
   apis: ['./src/infrastructure/http/routes/*.js', './src/infrastructure/http/controllers/*.js'],
 };
