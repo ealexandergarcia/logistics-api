@@ -7,7 +7,6 @@ import Address from '../../../domain/entities/address.js';
 import Shipment from '../../../domain/entities/shipment.js';
 import { validateAddress } from '../../../services/addressValidationService.js'; // Import the validation function
 
-
 export const registerShipment = async (req, res) => {
   try {
     const { weight, length, width, height, productType, streetAddress, city, department, postalCode, country, details, returnStreetAddress, returnCity, returnDepartment, returnPostalCode, returnCountry, returnDetails } = req.body;
@@ -53,6 +52,6 @@ export const assignShipment = async (req, res, next) => {
     const shipment = await assignShipmentUseCase({ userId, shipmentId, routeId, carrierId });
     res.status(200).json({ message: 'Shipment assigned successfully', shipment });
   } catch (error) {
-    next(error);
+    res.status(400).json({ message: error.message });
   }
 };
