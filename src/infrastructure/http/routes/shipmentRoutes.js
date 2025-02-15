@@ -1,5 +1,6 @@
 import express from 'express';
 import { registerShipment, assignShipment } from '../controllers/shipmentController.js';
+import { getAdvancedShipmentReport } from "../controllers/shipmentReportController.js";
 import { getShipmentStatus } from '../controllers/shipmentStatusController.js';
 import { shipmentValidator, shipmentAssignmentValidator } from '../validators/shipmentValidator.js';
 import { handleValidationErrors } from '../middlewares/errorHandler.js';
@@ -180,5 +181,75 @@ router.post('/assign', limit('post'), versioning('1.0.0'), jwtMiddleware, adminM
  *         description: Internal server error
  */
 router.get('/status/:id', limit('get'), versioning('1.0.0'),handleValidationErrors, jwtMiddleware,getShipmentStatus);
+
+
+/**
+ * @swagger
+ * /shipments/report:
+ *   get:
+ *     summary: Get detailed shipment reports with advanced filters
+ *     description: Retrieve shipment reports using filters like status, assigned carrier, and pagination.
+ *     tags: [Shipment Reports]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           example: "delivered"
+ *         description: Filter shipments by status (e.g., pending, in transit, delivered)
+ *       - in: query
+ *         name: carrierId
+ *         schema:
+ *           type: integer
+ *           example: 3
+ *         description: Filter by assigned carrier ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: Page number for pagination (default is 1)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           example: 10
+ *         description: Number of results per page (default is 10)
+ *       - in: header
+ *         name: x-version
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "1.0.0"
+ *         description: API version
+ *     responses:
+ *       200:
+ *         description: Shipment report retrieved successfully
+ *         content:
+ *           application/json:
+ *             example:
+ *               shipments:
+ *                 - id: 1
+ *                   status: "IN_TRANSIT"
+ *                   created_at: "2025-02-01T10:00:00Z"
+ *                   updated_at: "2025-02-03T15:30:00Z"
+ *                   carrier_name: "FedEx"
+ *                   delivery_time_hours: 53
+ *                 - id: 2
+ *                   status: "pending"
+ *                   created_at: "2025-02-02T12:45:00Z"
+ *                   updated_at: null
+ *                   carrier_name: "DHL"
+ *                   delivery_time_hours: null
+ *       400:
+ *         description: Validation error (e.g., missing or invalid parameters)
+ *       401:
+ *         description: Unauthorized - missing or invalid token
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/report", limit("get"), versioning("1.0.0"), jwtMiddleware, adminMiddleware, getAdvancedShipmentReport);
 
 export default router;
