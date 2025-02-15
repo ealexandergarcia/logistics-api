@@ -1,5 +1,6 @@
 import express from 'express';
 import { registerShipment, assignShipment } from '../controllers/shipmentController.js';
+import { getShipmentStatus } from '../controllers/shipmentStatusController.js';
 import { shipmentValidator, shipmentAssignmentValidator } from '../validators/shipmentValidator.js';
 import { handleValidationErrors } from '../middlewares/errorHandler.js';
 import { jwtMiddleware, adminMiddleware } from '../middlewares/authMiddleware.js';
@@ -146,5 +147,38 @@ router.post('/register', limit('post'), versioning('1.0.0'), shipmentValidator, 
  *         description: Internal server error
  */
 router.post('/assign', limit('post'), versioning('1.0.0'), jwtMiddleware, adminMiddleware, shipmentAssignmentValidator, handleValidationErrors, assignShipment);
+
+
+/**
+ * @swagger
+ * /shipments/status/{id}:
+ *   get:
+ *     summary: Get the current status of a shipment
+ *     tags: [Shipment Status]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Shipment ID
+ *       - in: header
+ *         name: x-version
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: 1.0.0
+ *         description: API version
+ *     responses:
+ *       200:
+ *         description: Shipment status retrieved successfully
+ *       404:
+ *         description: Shipment not found
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/status/:id', limit('get'), versioning('1.0.0'), jwtMiddleware, getShipmentStatus);
 
 export default router;
