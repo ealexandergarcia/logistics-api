@@ -14,6 +14,11 @@ class PackageRepository extends IPackageRepository {
     );
     return result.insertId;
   }
+
+  async findById(packageId) {
+    const pkg = await db.query('SELECT * FROM packages WHERE id = $1', [packageId]);
+    return pkg.rows[0];
+  }
 }
 
 export default new PackageRepository();
