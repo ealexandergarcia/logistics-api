@@ -2,50 +2,19 @@ import { LoginUserUseCase } from '../../../application/use-cases/loginUserUseCas
 import { RegisterUserUseCase } from '../../../application/use-cases/registerUserUseCase.js';
 import UserRepository from '../../../domain/repositories/userRepository.js';
 
+// Initialize use cases
 const registerUserUseCase = new RegisterUserUseCase(UserRepository);
 const loginUserUseCase = new LoginUserUseCase(UserRepository);
 
 /**
- * @swagger
- * tags:
- *   name: Users
- *   description: User management
- */
-
-/**
- * @swagger
- * /users/register:
- *   post:
- *     summary: Register a new user
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 example: user@example.com
- *               password:
- *                 type: string
- *                 example: yourpassword
- *     parameters:
- *       - in: header
- *         name: x-version
- *         required: true
- *         schema:
- *           type: string
- *           example: 1.0.0
- *         description: API version
- *     responses:
- *       201:
- *         description: User registered successfully
- *       400:
- *         description: Validation error
- *       500:
- *         description: Internal server error
+ * Registers a new user.
+ * 
+ * This controller handles the registration of a new user, including:
+ * - Checking if the user already exists.
+ * - Saving the new user to the database.
+ * 
+ * @param {Object} req - The Express request object.
+ * @param {Object} res - The Express response object.
  */
 export const registerUser = async (req, res) => {
   try {
@@ -62,39 +31,14 @@ export const registerUser = async (req, res) => {
 };
 
 /**
- * @swagger
- * /users/login:
- *   post:
- *     summary: Login a user
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 example: user@example.com
- *               password:
- *                 type: string
- *                 example: yourpassword
- *     parameters:
- *       - in: header
- *         name: x-version
- *         required: true
- *         schema:
- *           type: string
- *           example: 1.0.0
- *         description: API version
- *     responses:
- *       200:
- *         description: Login successful
- *       400:
- *         description: Validation error
- *       500:
- *         description: Internal server error
+ * Logs in a user.
+ * 
+ * This controller handles the login process for a user, including:
+ * - Validating the user's credentials.
+ * - Generating a JWT token for the authenticated user.
+ * 
+ * @param {Object} req - The Express request object.
+ * @param {Object} res - The Express response object.
  */
 export const loginUser = async (req, res) => {
   try {

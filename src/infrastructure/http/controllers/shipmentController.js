@@ -8,6 +8,17 @@ import Address from '../../../domain/entities/address.js';
 import Shipment from '../../../domain/entities/shipment.js';
 import { validateAddress } from '../../../services/addressValidationService.js'; // Import the validation function
 
+/**
+ * Registers a new shipment.
+ * 
+ * This controller handles the registration of a new shipment, including:
+ * - Validating the destination and return addresses.
+ * - Creating and saving the addresses, package, and shipment.
+ * - Storing shipment data in Redis.
+ * 
+ * @param {Object} req - The Express request object.
+ * @param {Object} res - The Express response object.
+ */
 export const registerShipment = async (req, res) => {
   try {
     const { weight, length, width, height, productType, streetAddress, city, department, postalCode, country, details, returnStreetAddress, returnCity, returnDepartment, returnPostalCode, returnCountry, returnDetails } = req.body;
@@ -16,10 +27,12 @@ export const registerShipment = async (req, res) => {
     const fullAddress = `${streetAddress}, ${city}, ${country}`;
     const fullReturnAddress = `${returnStreetAddress}, ${returnCity}, ${returnCountry}`;
 
+    // Validate destination address
     if (!streetAddress || !(await validateAddress(fullAddress))) {
       return res.status(400).json({ message: 'Invalid destination address' });
     }
 
+    // Validate return address
     if (!returnStreetAddress || !(await validateAddress(fullReturnAddress))) {
       return res.status(400).json({ message: 'Invalid return address' });
     }
@@ -56,6 +69,16 @@ export const registerShipment = async (req, res) => {
   }
 };
 
+/**
+ * Assigns a shipment to a carrier and route.
+ * 
+ * This controller handles the assignment of a shipment to a carrier and route, including:
+ * - Updating the shipment status in Redis.
+ * 
+ * @param {Object} req - The Express request object.
+ * @param {Object} res - The Express response object.
+ * @param {Function} next - The next middleware function.
+ */
 export const assignShipment = async (req, res, next) => {
   try {
     const { shipmentId, routeId, carrierId } = req.body;
