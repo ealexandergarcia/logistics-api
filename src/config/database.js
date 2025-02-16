@@ -1,3 +1,11 @@
+/**
+ * Configuration for database connections.
+ * 
+ * This file exports configuration objects for MySQL and Redis databases.
+ * It uses environment variables to set connection details.
+ * 
+ * @module databaseConfig
+ */
 export const databaseConfig = {
     mysql: {
       host: process.env.MYSQL_HOST,

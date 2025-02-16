@@ -2,12 +2,27 @@ import IShipmentRepository from './IShipmentRepository.js';
 import { getMySQLInstance } from '../../infrastructure/database/mysql.js';
 import Shipment from '../entities/Shipment.js';
 
+/**
+ * Repository for managing shipment data.
+ * 
+ * This class implements the `IShipmentRepository` interface and provides methods
+ * for saving, retrieving, and updating shipment data in the database.
+ * 
+ * @class
+ * @extends IShipmentRepository
+ */
 class ShipmentRepository extends IShipmentRepository {
   constructor() {
     super();
     this.db = getMySQLInstance();
   }
 
+  /**
+   * Saves a new shipment to the database.
+   * 
+   * @param {Shipment} shipment - The shipment object to save.
+   * @returns {number} - The ID of the newly created shipment.
+   */
   async save(shipment) {
     const result = await this.db.query(
       'INSERT INTO shipments (user_id, package_id, address_id, return_address_id, status) VALUES (?, ?, ?, ?, ?)',
@@ -16,6 +31,12 @@ class ShipmentRepository extends IShipmentRepository {
     return result.insertId;
   }
 
+  /**
+   * Finds a shipment by its ID.
+   * 
+   * @param {string} shipmentId - The ID of the shipment to find.
+   * @returns {Shipment|null} - The shipment object if found, otherwise null.
+   */
   async findById(shipmentId) {
     const result = await this.db.query('SELECT * FROM shipments WHERE id = ?', [shipmentId]);
     if (result.length === 0) return null;
@@ -33,6 +54,12 @@ class ShipmentRepository extends IShipmentRepository {
     });
   }
 
+  /**
+   * Updates an existing shipment in the database.
+   * 
+   * @param {Shipment} shipment - The shipment object to update.
+   * @returns {boolean} - True if the update was successful, otherwise false.
+   */
   async update(shipment) {
     const result = await this.db.query(
       'UPDATE shipments SET route_id = ?, carrier_id = ?, status = ? WHERE id = ?',
