@@ -1,7 +1,22 @@
 import redisClient from '../../config/redisClient.js';
 import ShipmentRepository from './shipmentRepository.js';
 
+/**
+ * Repository for managing shipment status data.
+ * 
+ * This class provides methods for retrieving and updating shipment status data,
+ * with support for caching in Redis.
+ * 
+ * @class
+ */
 class ShipmentStatusRepository {
+  /**
+   * Retrieves the status of a shipment by its ID.
+   * 
+   * @param {string} shipmentId - The ID of the shipment to retrieve the status for.
+   * @returns {Object} - The shipment status data.
+   * @throws {Error} - If an error occurs while retrieving the status.
+   */
   async getStatus(shipmentId) {
     try {
       let shipmentData = await redisClient.hGetAll(`shipment:${shipmentId}`);
@@ -19,6 +34,13 @@ class ShipmentStatusRepository {
     }
   }
 
+  /**
+   * Updates the status of a shipment in Redis.
+   * 
+   * @param {string} shipmentId - The ID of the shipment to update.
+   * @param {string} status - The new status of the shipment.
+   * @throws {Error} - If an error occurs while updating the status.
+   */
   async setStatus(shipmentId, status) {
     try {
       await redisClient.hSet(`shipment:${shipmentId}`, 'status', status);
@@ -27,9 +49,15 @@ class ShipmentStatusRepository {
     }
   }
 
+  /**
+   * Sets shipment data in Redis.
+   * 
+   * @param {string} shipmentId - The ID of the shipment.
+   * @param {Object} shipmentData - The shipment data to store in Redis.
+   * @throws {Error} - If an error occurs while setting the data.
+   */
   async setShipmentData(shipmentId, shipmentData) {
     try {
-      
       // Convert dates to ISO strings and create a flat object for Redis
       const redisData = {};
       for (const [key, value] of Object.entries(shipmentData)) {
@@ -41,10 +69,7 @@ class ShipmentStatusRepository {
       }
 
       // Use multiple hSet operations if needed
-      await redisClient.hSet(
-        `shipment:${shipmentId}`,
-        redisData
-      );
+      await redisClient.hSet(`shipment:${shipmentId}`, redisData);
     } catch (error) {
       console.error(`Error setting shipment data for ID ${shipmentId}:`, error);
       throw error;
